@@ -1,13 +1,24 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import PlanetProvider from './context/PlanetProvider';
 import './App.css';
-import Table from './tests/components/Table';
+import Table from './components/Table';
 
 function App() {
+  const [planetsData, setPlanetsData] = useState([]);
+  const fetchData = async () => {
+    const request = await fetch('https://swapi.dev/api/planets');
+    const response = await request.json();
+    const dataResult = response.results;
+    const filteredData = dataResult.filter((item) => delete item.residents);
+    setPlanetsData(filteredData);
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
   return (
-    <div>
-      <h1>Projeto Star Wars - Trybe</h1>
+    <PlanetProvider.Provider value={ planetsData }>
       <Table />
-    </div>
+    </PlanetProvider.Provider>
   );
 }
 
