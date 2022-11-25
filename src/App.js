@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import PlanetProvider from './context/PlanetProvider';
 import './App.css';
 import Table from './components/Table';
@@ -19,6 +19,10 @@ function App() {
     fetchData();
   }, []);
 
+  const values = useMemo(() => ({
+    planetsData, nameFilter,
+  }), [planetsData, nameFilter]);
+
   // const handleChange = (e) => {
   //   setNameFilter({
   //     [e.target.name]: e.target.value,
@@ -26,7 +30,7 @@ function App() {
   // };
 
   return (
-    <PlanetProvider.Provider value={ planetsData }>
+    <PlanetProvider.Provider value={ values }>
       <input
         className="filter-input"
         type="text"
