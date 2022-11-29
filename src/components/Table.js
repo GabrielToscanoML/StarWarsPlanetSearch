@@ -2,24 +2,49 @@ import React, { useContext, useEffect, useState } from 'react';
 import PlanetProvider from '../context/PlanetProvider';
 
 function Table() {
-  const { planetsData, nameFilter } = useContext(PlanetProvider);
+  const { planetsData, nameFilter, columnFilter,
+    comparisonFilter, valueFilter } = useContext(PlanetProvider);
   const [dataList, setDataList] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
+  const [filteredListByNumber, setFilteredListByNumber] = useState([]);
 
   useEffect(() => {
     setDataList(planetsData);
   }, [planetsData]);
 
+  const buttonClick = () => {
+    // console.log('teste', filteredList);
+    const newFilteredList = filteredList.filter((item) => {
+      if (comparisonFilter === 'maior que') {
+        return +item[columnFilter] > +valueFilter;
+      } if (comparisonFilter === 'menor que') {
+        return +item[columnFilter] < +valueFilter;
+      }
+      return +item[columnFilter] === +valueFilter;
+    });
+    console.log(newFilteredList);
+    setFilteredListByNumber(newFilteredList);
+  };
+
+  useEffect(() => {
+    setFilteredList(filteredListByNumber);
+  }, [filteredListByNumber]);
+
   useEffect(() => {
     setFilteredList(dataList.filter(
       (item) => item.name.toUpperCase().includes(nameFilter.toUpperCase()),
     ));
-    // console.log(nameFilter.length);
   }, [nameFilter, dataList]);
 
   return (
     <div>
-      <p>{nameFilter}</p>
+      <button
+        type="button"
+        data-testid="button-filter"
+        onClick={ buttonClick }
+      >
+        Filtrar
+      </button>
       <table>
         <thead>
           <tr>
@@ -39,7 +64,7 @@ function Table() {
           </tr>
         </thead>
         <tbody>
-          { nameFilter.length === 0
+          { filteredList.length === 0
             ? (dataList.map((planet) => (
               <tr key={ planet.name }>
                 <td>{planet.name}</td>
