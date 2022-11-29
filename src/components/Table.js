@@ -13,7 +13,6 @@ function Table() {
   }, [planetsData]);
 
   const buttonClick = () => {
-    // console.log('teste', filteredList);
     const newFilteredList = filteredList.filter((item) => {
       if (comparisonFilter === 'maior que') {
         return +item[columnFilter] > +valueFilter;
@@ -22,7 +21,6 @@ function Table() {
       }
       return +item[columnFilter] === +valueFilter;
     });
-    console.log(newFilteredList);
     setFilteredListByNumber(newFilteredList);
   };
 
