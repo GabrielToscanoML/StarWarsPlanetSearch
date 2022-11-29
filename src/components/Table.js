@@ -3,7 +3,8 @@ import PlanetProvider from '../context/PlanetProvider';
 
 function Table() {
   const { planetsData, nameFilter, columnFilter,
-    comparisonFilter, valueFilter } = useContext(PlanetProvider);
+    comparisonFilter, valueFilter,
+    filtersColumnList, setFiltersColumnList } = useContext(PlanetProvider);
   const [dataList, setDataList] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
   const [filteredListByNumber, setFilteredListByNumber] = useState([]);
@@ -11,6 +12,11 @@ function Table() {
   useEffect(() => {
     setDataList(planetsData);
   }, [planetsData]);
+
+  const removeFilter = () => {
+    setFiltersColumnList(filtersColumnList
+      .filter((item) => item !== columnFilter));
+  };
 
   const buttonClick = () => {
     const newFilteredList = filteredList.filter((item) => {
@@ -22,6 +28,7 @@ function Table() {
       return +item[columnFilter] === +valueFilter;
     });
     setFilteredListByNumber(newFilteredList);
+    removeFilter();
   };
 
   useEffect(() => {

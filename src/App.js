@@ -9,6 +9,8 @@ function App() {
   const [columnFilter, setColumnFilter] = useState('population');
   const [comparisonFilter, setComparisonFilter] = useState('maior que');
   const [valueFilter, setValueFilter] = useState(0);
+  const [filtersColumnList, setFiltersColumnList] = useState(['population',
+    'orbital_period', 'diameter', 'rotation_period', 'surface_water']);
 
   const fetchData = async () => {
     const request = await fetch('https://swapi.dev/api/planets');
@@ -28,8 +30,10 @@ function App() {
     columnFilter,
     comparisonFilter,
     valueFilter,
+    filtersColumnList,
+    setFiltersColumnList,
   }), [planetsData, nameFilter, columnFilter,
-    comparisonFilter, valueFilter]);
+    comparisonFilter, valueFilter, filtersColumnList]);
 
   return (
     <PlanetProvider.Provider value={ values }>
@@ -48,11 +52,11 @@ function App() {
           onChange={ ({ target }) => setColumnFilter(target.value) }
           value={ columnFilter }
         >
-          <option>population</option>
-          <option>orbital_period</option>
-          <option>diameter</option>
-          <option>rotation_period</option>
-          <option>surface_water</option>
+          {
+            filtersColumnList.map((item, index) => (
+              <option key={ index }>{ item }</option>
+            ))
+          }
         </select>
       </label>
       <label htmlFor="operador">
