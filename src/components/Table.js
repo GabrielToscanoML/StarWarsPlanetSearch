@@ -4,7 +4,8 @@ import PlanetProvider from '../context/PlanetProvider';
 function Table() {
   const { planetsData, nameFilter, columnFilter,
     comparisonFilter, valueFilter,
-    filtersColumnList, setFiltersColumnList } = useContext(PlanetProvider);
+    filtersColumnList, setFiltersColumnList,
+    setColumnFilter } = useContext(PlanetProvider);
   const [dataList, setDataList] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
   const [filteredListByNumber, setFilteredListByNumber] = useState([]);
@@ -16,17 +17,21 @@ function Table() {
   const removeFilter = () => {
     setFiltersColumnList(filtersColumnList
       .filter((item) => item !== columnFilter));
+    setColumnFilter(filtersColumnList[0]);
   };
 
   const buttonClick = () => {
     const newFilteredList = filteredList.filter((item) => {
       if (comparisonFilter === 'maior que') {
         return +item[columnFilter] > +valueFilter;
-      } if (comparisonFilter === 'menor que') {
+      }
+      if (comparisonFilter === 'menor que') {
+        console.log(columnFilter, valueFilter);
         return +item[columnFilter] < +valueFilter;
       }
       return +item[columnFilter] === +valueFilter;
     });
+    console.log(newFilteredList);
     setFilteredListByNumber(newFilteredList);
     removeFilter();
   };

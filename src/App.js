@@ -32,6 +32,7 @@ function App() {
     valueFilter,
     filtersColumnList,
     setFiltersColumnList,
+    setColumnFilter,
   }), [planetsData, nameFilter, columnFilter,
     comparisonFilter, valueFilter, filtersColumnList]);
 
