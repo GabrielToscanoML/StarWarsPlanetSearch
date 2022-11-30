@@ -46,6 +46,7 @@ function Table() {
     ));
   }, [nameFilter, dataList]);
 
+
   return (
     <div>
       <button
