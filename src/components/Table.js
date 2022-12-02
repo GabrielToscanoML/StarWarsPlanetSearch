@@ -26,7 +26,6 @@ function Table() {
         return +item[columnFilter] > +valueFilter;
       }
       if (comparisonFilter === 'menor que') {
-        console.log(columnFilter, valueFilter);
         return +item[columnFilter] < +valueFilter;
       }
       return +item[columnFilter] === +valueFilter;
@@ -45,7 +44,6 @@ function Table() {
       (item) => item.name.toUpperCase().includes(nameFilter.toUpperCase()),
     ));
   }, [nameFilter, dataList]);
-
 
   return (
     <div>
