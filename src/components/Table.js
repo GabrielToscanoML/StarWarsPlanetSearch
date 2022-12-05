@@ -9,8 +9,8 @@ function Table() {
   const [filteredList, setFilteredList] = useState([]);
   const [filteredListByNumber, setFilteredListByNumber] = useState([]);
   // const [currFilters, setcurrFilters] = useState([]);
-  // const filters = ['population',
-  //   'orbital_period', 'diameter', 'rotation_period', 'surface_water'];
+  const filters = ['population',
+    'orbital_period', 'diameter', 'rotation_period', 'surface_water'];
 
   useEffect(() => {
     setFilteredList(planetsData);
@@ -69,11 +69,11 @@ function Table() {
   //   }
   // };
 
-  // const removeAllFilters = () => {
-  //   setFiltersColumnList(filters);
-  //   setcurrFilters([]);
-  //   setFilteredList([]);
-  // };
+  const removeAllFilters = () => {
+    setFiltersColumnList(filters);
+    // setcurrFilters([]);
+    setFilteredList(planetsData);
+  };
 
   return (
     <div>
@@ -84,14 +84,14 @@ function Table() {
       >
         Filtrar
       </button>
-      {/* <button
+      <button
         type="button"
         data-testid="button-remove-filters"
         onClick={ removeAllFilters }
       >
         Remover Filtros
       </button>
-      <ul>
+      {/* <ul>
         {
           currFilters.map((item) => (
             <li key={ item.columnFilter }>
@@ -110,8 +110,8 @@ function Table() {
               </button>
             </li>
           ))
-        } */}
-      {/* </ul> */}
+        }
+      </ul> */}
       <table>
         <thead>
           <tr>
