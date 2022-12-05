@@ -8,7 +8,7 @@ function Table() {
     setColumnFilter } = useContext(PlanetProvider);
   const [filteredList, setFilteredList] = useState([]);
   const [filteredListByNumber, setFilteredListByNumber] = useState([]);
-  // const [currFilters, setcurrFilters] = useState([]);
+  const [currFilters, setcurrFilters] = useState([]);
   const filters = ['population',
     'orbital_period', 'diameter', 'rotation_period', 'surface_water'];
 
@@ -19,6 +19,12 @@ function Table() {
   useEffect(() => {
     setFilteredList(filteredListByNumber);
   }, [filteredListByNumber]);
+
+  useEffect(() => {
+    if (currFilters.length === 0) {
+      setFilteredList(planetsData);
+    }
+  }, [currFilters, planetsData]);
 
   useEffect(() => {
     setFilteredList(planetsData.filter(
@@ -35,11 +41,12 @@ function Table() {
     setColumnFilter(filtersColumnList[0]);
   };
 
-  // const addCurrFilter = () => {
-  //   setcurrFilters([...currFilters, { columnFilter, comparisonFilter, valueFilter }]);
-  // };
+  const addCurrFilter = () => {
+    setcurrFilters([...currFilters, { columnFilter, comparisonFilter, valueFilter }]);
+  };
+
   const buttonClick = () => {
-    const newFilteredList = filteredList.filter((item) => {
+    setFilteredListByNumber(filteredList.filter((item) => {
       if (comparisonFilter === 'maior que') {
         return +item[columnFilter] > +valueFilter;
       }
@@ -47,31 +54,44 @@ function Table() {
         return +item[columnFilter] < +valueFilter;
       }
       return +item[columnFilter] === +valueFilter;
-    });
-    setFilteredListByNumber(newFilteredList);
-    // addCurrFilter();
+    }));
+    addCurrFilter();
     removeFilter();
   };
 
-  // const removeCurrFilter = (columnfilter) => {
-  //   setFiltersColumnList(
-  //     [...filtersColumnList,
-  //       columnfilter],
-  //   );
-  //   setcurrFilters(currFilters
-  //     .filter((item) => item.columnFilter !== columnfilter));
+  function updateFilteredList(list, filter) {
+    let newFilter = [];
+    switch (filter.comparisonFilter) {
+    case 'menor que':
+      newFilter = list
+        .filter((item) => +item[filter.columnFilter] < +filter.valueFilter);
+      return newFilter;
+    case 'igual a':
+      newFilter = list
+        .filter((item) => +item[filter.columnFilter] === +filter.valueFilter);
+      return newFilter;
+    default:
+      newFilter = list
+        .filter((item) => +item[filter.columnFilter] > +filter.valueFilter);
+    }
+    setFilteredList(newFilter);
+  }
 
-  //   if (currFilters.length === 0) {
-  //     setFilteredList([]);
-  //   } else {
-  //     setFilteredList(filteredList
-  //       .filter((item) => item.columnFilter >= 0)); // tá errado
-  //   }
-  // };
+  const removeCurrFilter = (item) => {
+    setFiltersColumnList(
+      [...filtersColumnList,
+        item.columnFilter],
+    );
+    const newFilters = currFilters
+      .filter((element) => element.columnFilter !== item.columnFilter);
+    console.log(newFilters);
+    setcurrFilters(newFilters);
+    newFilters.map((filter) => updateFilteredList(planetsData, filter));
+  };
 
   const removeAllFilters = () => {
     setFiltersColumnList(filters);
-    // setcurrFilters([]);
+    setcurrFilters([]);
     setFilteredList(planetsData);
   };
 
@@ -91,27 +111,20 @@ function Table() {
       >
         Remover Filtros
       </button>
-      {/* <ul>
-        {
-          currFilters.map((item) => (
-            <li key={ item.columnFilter }>
-              {item.columnFilter}
-              {' '}
-              {item.comparisonFilter}
-              {' '}
-              {item.valueFilter}
-              {' '}
-              <button
-                type="button"
-                data-testid="filter"
-                onClick={ () => removeCurrFilter(item.columnFilter) }
-              >
-                X
-              </button>
-            </li>
-          ))
-        }
-      </ul> */}
+      {currFilters.map((item, index) => (
+        <div key={ index } data-testid="filter">
+          <span>
+            {`${item.columnFilter} ${item.comparisonFilter} ${item.valueFilter}`}
+          </span>
+          <button
+            type="button"
+            data-testid="button-remove-filter"
+            onClick={ () => removeCurrFilter(item) }
+          >
+            X
+          </button>
+        </div>
+      ))}
       <table>
         <thead>
           <tr>

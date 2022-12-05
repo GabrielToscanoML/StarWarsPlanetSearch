@@ -16,7 +16,7 @@ describe('Testes da aplicação', () => {
     jest.clearAllMocks();
   });
 
-  test('1 - Testa resultado com o filtro menor que aplicado', async () => {
+  test('1 - Testa resultado com o filtro "menor que" aplicado', async () => {
     render(<App />);
     await waitFor (() => {
       const tatooine = screen.queryByText('Tatooine');
@@ -51,9 +51,11 @@ describe('Testes da aplicação', () => {
     userEvent.click(buttonFilter);
     const Kamino = await screen.findByText('Kamino');
     expect(Kamino).toBeInTheDocument();
+    const removeFilter = screen.getByTestId('button-remove-filter');
+    userEvent.click(removeFilter);
   });
 
-  test('3 - Testa resultado com o filtro maior que aplicado', async () => {
+  test('3 - Testa resultado com o filtro "igual a" aplicado', async () => {
     render(<App />);
     await waitFor (() => {
       const tatooine = screen.queryByText('Tatooine');
