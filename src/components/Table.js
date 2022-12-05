@@ -6,13 +6,28 @@ function Table() {
     comparisonFilter, valueFilter,
     filtersColumnList, setFiltersColumnList,
     setColumnFilter } = useContext(PlanetProvider);
-  const [dataList, setDataList] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
   const [filteredListByNumber, setFilteredListByNumber] = useState([]);
+  // const [currFilters, setcurrFilters] = useState([]);
+  // const filters = ['population',
+  //   'orbital_period', 'diameter', 'rotation_period', 'surface_water'];
 
   useEffect(() => {
-    setDataList(planetsData);
+    setFilteredList(planetsData);
   }, [planetsData]);
+
+  useEffect(() => {
+    setFilteredList(filteredListByNumber);
+  }, [filteredListByNumber]);
+
+  useEffect(() => {
+    setFilteredList(planetsData.filter(
+      (item) => item.name.toUpperCase().includes(nameFilter.toUpperCase()),
+    ));
+    if (nameFilter.length === 0) {
+      setFilteredList(planetsData);
+    }
+  }, [nameFilter, planetsData]);
 
   const removeFilter = () => {
     setFiltersColumnList(filtersColumnList
@@ -20,6 +35,9 @@ function Table() {
     setColumnFilter(filtersColumnList[0]);
   };
 
+  // const addCurrFilter = () => {
+  //   setcurrFilters([...currFilters, { columnFilter, comparisonFilter, valueFilter }]);
+  // };
   const buttonClick = () => {
     const newFilteredList = filteredList.filter((item) => {
       if (comparisonFilter === 'maior que') {
@@ -30,20 +48,32 @@ function Table() {
       }
       return +item[columnFilter] === +valueFilter;
     });
-    console.log(newFilteredList);
     setFilteredListByNumber(newFilteredList);
+    // addCurrFilter();
     removeFilter();
   };
 
-  useEffect(() => {
-    setFilteredList(filteredListByNumber);
-  }, [filteredListByNumber]);
+  // const removeCurrFilter = (columnfilter) => {
+  //   setFiltersColumnList(
+  //     [...filtersColumnList,
+  //       columnfilter],
+  //   );
+  //   setcurrFilters(currFilters
+  //     .filter((item) => item.columnFilter !== columnfilter));
 
-  useEffect(() => {
-    setFilteredList(dataList.filter(
-      (item) => item.name.toUpperCase().includes(nameFilter.toUpperCase()),
-    ));
-  }, [nameFilter, dataList]);
+  //   if (currFilters.length === 0) {
+  //     setFilteredList([]);
+  //   } else {
+  //     setFilteredList(filteredList
+  //       .filter((item) => item.columnFilter >= 0)); // tá errado
+  //   }
+  // };
+
+  // const removeAllFilters = () => {
+  //   setFiltersColumnList(filters);
+  //   setcurrFilters([]);
+  //   setFilteredList([]);
+  // };
 
   return (
     <div>
@@ -54,6 +84,34 @@ function Table() {
       >
         Filtrar
       </button>
+      {/* <button
+        type="button"
+        data-testid="button-remove-filters"
+        onClick={ removeAllFilters }
+      >
+        Remover Filtros
+      </button>
+      <ul>
+        {
+          currFilters.map((item) => (
+            <li key={ item.columnFilter }>
+              {item.columnFilter}
+              {' '}
+              {item.comparisonFilter}
+              {' '}
+              {item.valueFilter}
+              {' '}
+              <button
+                type="button"
+                data-testid="filter"
+                onClick={ () => removeCurrFilter(item.columnFilter) }
+              >
+                X
+              </button>
+            </li>
+          ))
+        } */}
+      {/* </ul> */}
       <table>
         <thead>
           <tr>
@@ -73,27 +131,10 @@ function Table() {
           </tr>
         </thead>
         <tbody>
-          { filteredList.length === 0
-            ? (dataList.map((planet) => (
-              <tr key={ planet.name }>
-                <td>{planet.name}</td>
-                <td>{planet.rotation_period}</td>
-                <td>{planet.orbital_period}</td>
-                <td>{planet.diameter}</td>
-                <td>{planet.climate}</td>
-                <td>{planet.gravity}</td>
-                <td>{planet.terrain}</td>
-                <td>{planet.surface_water}</td>
-                <td>{planet.population}</td>
-                <td>{planet.films}</td>
-                <td>{planet.created}</td>
-                <td>{planet.edited}</td>
-                <td>{planet.url}</td>
-              </tr>
-            )))
-            : (filteredList.map((item) => (
+          {
+            filteredList.map((item) => (
               <tr key={ item.name }>
-                <td>{item.name}</td>
+                <td data-testid="planets-name">{item.name}</td>
                 <td>{item.rotation_period}</td>
                 <td>{item.orbital_period}</td>
                 <td>{item.diameter}</td>
@@ -107,7 +148,8 @@ function Table() {
                 <td>{item.edited}</td>
                 <td>{item.url}</td>
               </tr>
-            )))}
+            ))
+          }
         </tbody>
       </table>
     </div>
